@@ -7,27 +7,45 @@ var specialChars = ["!", "#", "$", "%", "&", "*", "+", "-", ".", "/", "?", "@", 
 
 var generatePassword = function () {
   // prompt user for what to include
-  var tot_chars = 0
-
-  var addUpperCase =function() {
-    var includeUpperCase = window.prompt("Please enter the minimum number of Upper Case Letters to include (0 for none)");
-    
+  var addUpperCase = function () {
+    var includeUpperCase = parseInt(window.prompt("Please enter the minimum number of Upper Case Letters to include (0 to 128)", "0"), 10);
+    if (includeUpperCase >= 0 && includeUpperCase <= 128) {
+      return includeUpperCase
+    }
+    addUpperCase();
   }
-  var includeUpperCase = "";
-  var type = typeof(includeUpperCase)
-  console.log(typeof(includeUpperCase))
-  while (type !== "number") {
-
-    var type = typeof(includeUpperCase)
-    console.log(type)
+  var addLowerCase = function () {
+    var includeLowerCase = parseInt(window.prompt("Please enter the minimum number of Lower Case Letters to include (0 to 128)", "0"), 10);
+    if (includeLowerCase >= 0 && includeLowerCase <= 128) {
+      return includeLowerCase
+    }
+    addLowerCase();
   }
-
-  var includeLowerCase = window.prompt("Please enter the minimum number of Lower Case Letters to include (0 for none)");
-  var includeNumbers = window.prompt("Please enter the minimum number of number to include (0 for none)");
-  var includeSpecialChar = window.prompt("Please enter the minimum number of special characters to include (0 for none)");
-  var maxPassLength = window.prompt("Please enter the required password length.");
-
-
+  var addNumber = function () {
+    var includeNumbers = parseInt(window.prompt("Please enter the minimum number of number to include (0 to 128)","0"), 10);
+    if (includeNumbers >= 0 && includeNumbers <= 128) {
+      return includeNumbers
+    }
+    addNumber();
+  }
+  var addSpecialChar = function () {
+    var includeSpecialChar = parseInt(window.prompt("Please enter the minimum number of special characters to include (0 to 128","0"), 10);
+    if (includeSpecialChar >= 0 && includeSpecialChar <= 128) {
+      return includeSpecialChar
+    }
+    addSpecialChar();
+  }
+  
+  var setPasswordLength = function (Upper, Lower, Number, Special) {
+    minlength = (128 - (Upper + Lower + Number + Special))
+    var maxPassLength = window.prompt("Please enter the required password length (0 - " + minlength + " ).","25");
+  }
+  //call functions to prompt user
+  var Upper = addUpperCase();
+  var Lower = addLowerCase();
+  var Number = addNumber();
+  var Special = addSpecialChar();
+  var passwordLength = setPasswordLength(Upper, Lower, Number, Special);
   // set arrays to use to an array so we can use this to randomize what array it pulls from
   var tempPassword = ""
   var usableSets = []
@@ -36,25 +54,25 @@ var generatePassword = function () {
     usableSets.push(upperCase);
     var randomUpperLetter = upperCase[Math.floor(Math.random() * Math.floor(upperCase.length))];
     var tempPassword = tempPassword.concat(randomUpperLetter)
-    passwordLength --;
+    passwordLength--;
   }
   if (includeLowerCase === "y") {
     usableSets.push(lowerCase);
     var randomLowerLetter = lowerCase[Math.floor(Math.random() * Math.floor(lowerCase.length))];
     var tempPassword = tempPassword.concat(randomLowerLetter)
-    passwordLength --;
+    passwordLength--;
   }
   if (includeNumbers === "y") {
     usableSets.push(numbers);
     var randomNumber = numbers[Math.floor(Math.random() * Math.floor(numbers.length))];
     var tempPassword = tempPassword.concat(randomNumber)
-    passwordLength --;
+    passwordLength--;
   }
   if (includeSpecialChar === "y") {
     usableSets.push(specialChars);
     var randomSpecialCharacter = specialChars[Math.floor(Math.random() * Math.floor(specialChars.length))];
     var tempPassword = tempPassword.concat(randomSpecialCharacter)
-    passwordLength --;
+    passwordLength--;
   }
   // set loop for max password length
   console.log(passwordLength)
